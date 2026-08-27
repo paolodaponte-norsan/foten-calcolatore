@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Norsan Configuratore</title>
+  <meta name="description" content="Calcolatore automatico dei dosaggi giornalieri di Omega-3 (EPA+DHA) per cane e gatto: schema terapeutico per patologia calcolato sul peso metabolico dell'animale." />
+  <meta property="og:title" content="Norsan Configuratore — Calcolatore Dosaggi Omega-3" />
+  <meta property="og:description" content="Calcolatore automatico dei dosaggi giornalieri di Omega-3 (EPA+DHA) per cane e gatto in base al peso metabolico." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="it_IT" />
+  <meta property="og:image" content="https://norsan-configuratore.vercel.app/assets/icons/icon-512.png" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/icons/favicon.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <img class="topbar__logo" src="assets/foten-logo-white.svg" alt="Foten" />
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 class="card__title">Calcolatore Omega-3<span class="card__title-dot">·</span>Veterinario</h2>
+
+      <div class="controls">
+        <div class="control">
+          <h3 class="control__label">Tipologia</h3>
+          <div class="tipologia" role="group" aria-label="Tipologia animale">
+            <button type="button" class="pet-btn" data-pet="cane" aria-pressed="false">
+              <i class="fa-solid fa-dog"></i>
+              <span>Cane</span>
+            </button>
+            <button type="button" class="pet-btn" data-pet="gatto" aria-pressed="false">
+              <i class="fa-solid fa-cat"></i>
+              <span>Gatto</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="control-group control-group--grow">
+          <div class="control control--grow">
+            <label class="control__label" for="peso">
+              Peso vivo
+              <span class="tooltip" tabindex="0" role="img" aria-label="Inserisci il peso reale e attuale dell'animale, espresso in chilogrammi.">
+                <i class="fa-solid fa-circle-info"></i>
+                <span class="tooltip__text">Inserisci il peso reale e attuale dell'animale, espresso in chilogrammi (kg).</span>
+              </span>
+            </label>
+            <div class="input-unit">
+              <input id="peso" type="text" inputmode="decimal" placeholder="Inserisci il peso" />
+              <span class="input-unit__suffix" aria-hidden="true">kg</span>
+            </div>
+          </div>
+
+          <div class="control control--grow">
+            <label class="control__label" for="peso-metabolico">
+              Peso metabolico
+              <span class="tooltip" tabindex="0" role="img" aria-label="Calcolato automaticamente elevando il peso vivo alla potenza di 0,75 per il cane e di 0,67 per il gatto.">
+                <i class="fa-solid fa-circle-info"></i>
+                <span class="tooltip__text">Valore calcolato automaticamente in base alla tipologia selezionata: per il cane il peso vivo viene elevato alla potenza di 0,75 (peso<sup>0,75</sup>), per il gatto alla potenza di 0,67 (peso<sup>0,67</sup>).</span>
+              </span>
+            </label>
+            <div class="input-unit">
+              <input id="peso-metabolico" type="text" readonly placeholder="—" />
+              <span class="input-unit__suffix" aria-hidden="true">kg</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="calcola" class="btn">Calcola</button>
+      </div>
+
+      <p id="output" class="output" aria-live="polite"></p>
+    </section>
+
+    <section class="card result-card" id="result-card" aria-live="polite" hidden>
+      <h2 class="card__title">Riepilogo dello Schema Terapeutico</h2>
+      <p class="result-card__subtitle" id="result-summary"></p>
+
+      <div class="dose-table-wrap" id="wrap-cane" hidden>
+      <table class="dose-table" id="table-cane">
+        <thead>
+          <tr>
+            <th>Patologia</th>
+            <th>
+              <span class="dose-name">
+                Posologia
+                <span class="tooltip" tabindex="0" role="img" aria-label="La posologia è espressa in milligrammi per chilogrammo, riferiti al peso metabolico (pm) o al peso vivo (pv) a seconda della patologia.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">La posologia è espressa in <strong>mg/kg</strong>, riferiti al <strong>peso metabolico (pm)</strong> o al <strong>peso vivo (pv)</strong> a seconda della patologia.</span>
+                </span>
+              </span>
+            </th>
+            <th class="col-prodotto" data-tit="158" data-unit="ml">Merluzzo<br>Selvatico</th>
+            <th class="col-prodotto" data-tit="371" data-unit="ml">Alga<br>Delicata</th>
+            <th class="col-prodotto" data-tit="268" data-unit="ml">Pesce<br>Azzurro</th>
+            <th class="col-prodotto" data-tit="420" data-unit="capsula">Alga<br>Capsule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-dose="310" data-base="pm">
+            <td><span class="dose-name">Osteoartrite</span></td>
+            <td>310 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="140" data-base="pm">
+            <td><span class="dose-name">Malattia renale cronica</span></td>
+            <td>140 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="125" data-base="pm">
+            <td>
+              <span class="dose-name">
+                Malattie pruriginose / IBD
+                <span class="tooltip" tabindex="0" role="img" aria-label="Idiopatiche e atopia.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Idiopatiche e atopia.</span>
+                </span>
+              </span>
+            </td>
+            <td>125 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="120" data-base="pm">
+            <td><span class="dose-name">Iperlipidemia idiopatica</span></td>
+            <td>120 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="115" data-base="pm">
+            <td>
+              <span class="dose-name">
+                Malattie cardiache
+                <span class="tooltip" tabindex="0" role="img" aria-label="Dose generale.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Dose generale.</span>
+                </span>
+              </span>
+            </td>
+            <td>115 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="65" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Cachessia / Anoressia
+                <span class="tooltip" tabindex="0" role="img" aria-label="Secondaria a insufficienza cardiaca.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Secondaria a insufficienza cardiaca.</span>
+                </span>
+              </span>
+            </td>
+            <td>65 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="45" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Scompenso cardiaco cronico e Aritmie
+                <span class="tooltip" tabindex="0" role="img" aria-label="Scompenso cardiaco cronico con cardiomiopatia dilatativa; aritmie da cardiomiopatia ventricolare destra nei Boxer.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Scompenso cardiaco cronico con cardiomiopatia dilatativa; aritmie da cardiomiopatia ventricolare destra nei Boxer.</span>
+                </span>
+              </span>
+            </td>
+            <td>45 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="26" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Qualità del mantello
+                <span class="tooltip" tabindex="0" role="img" aria-label="Seborrea.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Seborrea.</span>
+                </span>
+              </span>
+            </td>
+            <td>26 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="dose-table-wrap" id="wrap-gatto" hidden>
+      <table class="dose-table" id="table-gatto">
+        <thead>
+          <tr>
+            <th>Patologia</th>
+            <th>
+              <span class="dose-name">
+                Posologia
+                <span class="tooltip" tabindex="0" role="img" aria-label="La posologia è espressa in milligrammi per chilogrammo, riferiti al peso metabolico (pm) o al peso vivo (pv) a seconda della patologia.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">La posologia è espressa in <strong>mg/kg</strong>, riferiti al <strong>peso metabolico (pm)</strong> o al <strong>peso vivo (pv)</strong> a seconda della patologia.</span>
+                </span>
+              </span>
+            </th>
+            <th class="col-prodotto" data-tit="158" data-unit="ml">Merluzzo<br>Selvatico</th>
+            <th class="col-prodotto" data-tit="371" data-unit="ml">Alga<br>Delicata</th>
+            <th class="col-prodotto" data-tit="268" data-unit="ml">Pesce<br>Azzurro</th>
+            <th class="col-prodotto" data-tit="420" data-unit="capsula">Alga<br>Capsule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-dose="300" data-base="pm">
+            <td><span class="dose-name">Dermatite Allergica e Malattie Cutanee</span></td>
+            <td>300 <span class="unit-desktop">mg/kg-<strong>pm</strong></span><span class="unit-mobile">mg/kg su peso metabolico</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="375" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Malattia renale cronica
+                <span class="tooltip" tabindex="0" role="img" aria-label="Riduzione della proteinuria.">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Riduzione della proteinuria.</span>
+                </span>
+              </span>
+            </td>
+            <td>375 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="250" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Malattia renale cronica / PKD
+                <span class="tooltip" tabindex="0" role="img" aria-label="Secondaria a malattia del rene policistico (PKD).">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">Secondaria a malattia del rene policistico (PKD).</span>
+                </span>
+              </span>
+            </td>
+            <td>250 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+          <tr data-dose="120" data-base="pv">
+            <td>
+              <span class="dose-name">
+                Osteoartrite e Malattia Articolare Degenerativa
+                <span class="tooltip" tabindex="0" role="img" aria-label="DJD (Degenerative Joint Disease).">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span class="tooltip__text">DJD (Degenerative Joint Disease).</span>
+                </span>
+              </span>
+            </td>
+            <td>120 <span class="unit-desktop">mg/kg-<strong>pv</strong></span><span class="unit-mobile">mg/kg su peso vivo</span></td>
+            <td class="ml-prodotto" data-label="Merluzzo Selvatico">—</td>
+            <td class="ml-prodotto" data-label="Alga Delicata">—</td>
+            <td class="ml-prodotto" data-label="Pesce Azzurro">—</td>
+            <td class="ml-prodotto" data-label="Alga Capsule">—</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <hr class="legend-divider" />
+
+      <div class="legend">
+        <h3 class="legend__title">Titolazione prodotti</h3>
+        <ul class="legend__list">
+          <li><strong>Foten Merluzzo Selvatico:</strong> 65 mg EPA + 93 mg DHA = 158 mg di EPA+DHA totali per 1 ml</li>
+          <li><strong>Foten Alga Delicata:</strong> 120 mg EPA + 251 mg DHA = 371 mg di EPA+DHA totali per 1 ml</li>
+          <li><strong>Foten Pesce Azzurro:</strong> 130 mg EPA + 85 mg DHA + 12 mg DPA + 0,2 mcg vit. D + 0,47 mcg vit. E = 268 mg di Omega-3 totali per 1 ml</li>
+          <li><strong>Foten Alga Capsule:</strong> 113 mg EPA + 233 mg DHA + 23 mg DPA = 420 mg di Omega-3 totali per 1 capsula</li>
+        </ul>
+      </div>
+
+      <div class="sources-card">
+        <i class="fa-solid fa-book-open sources-card__icon"></i>
+        <p class="sources-card__text">
+          Tutte le posologie riportate derivano dalla letteratura scientifica veterinaria.
+          <button type="button" class="sources-card__link" id="open-sources">Consulta la bibliografia e le fonti</button>
+          per approfondire come vengono calcolati i dosaggi.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="sources-modal" hidden>
+    <div class="modal__backdrop" data-close-sources></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sources-modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="sources-modal-title">Bibliografia e Fonti</h2>
+      </header>
+      <div class="modal__body">
+        <ul class="ref-list">
+          <li class="ref-item">
+            Bauer, J. E. (2011). Therapeutic use of fish oils in companion animals. <em>Journal of the American Veterinary Medical Association, 239</em>(11), 1441–1451.
+            <a class="ref-item__link" href="https://doi.org/10.2460/javma.239.11.144" target="_blank" rel="noopener noreferrer">https://doi.org/10.2460/javma.239.11.144</a>
+          </li>
+          <li class="ref-item">
+            Kobayashi, S., Kawarasaki, M., Aono, A., Cho, J., Hashimoto, T., &amp; Sato, R. (2022). Renoprotective effects of docosahexaenoic acid in cats with early chronic kidney disease due to polycystic kidney disease: a pilot study. <em>Journal of Feline Medicine and Surgery, 24</em>(12), e505–e512.
+            <a class="ref-item__link" href="https://doi.org/10.1177/1098612X221136815" target="_blank" rel="noopener noreferrer">https://doi.org/10.1177/1098612X221136815</a>
+          </li>
+          <li class="ref-item">
+            Magalhães, T. R., Lourenço, A. L., Gregório, H., &amp; Queiroga, F. L. (2021). Therapeutic effect of EPA/DHA supplementation in neoplastic and non-neoplastic companion animal diseases: A systematic review. <em>In Vivo, 35</em>(3), 1419–1436.
+            <a class="ref-item__link" href="https://doi.org/10.21873/invivo.12394" target="_blank" rel="noopener noreferrer">https://doi.org/10.21873/invivo.12394</a>
+          </li>
+          <li class="ref-item">
+            Magalhães, T. R., Corbee, R. J., Queiroga, F. L., &amp; Lourenço, A. L. (2023). Dietary omega‐3 fatty acids in the management of feline periodontal disease: What is the evidence? <em>Journal of Animal Physiology and Animal Nutrition, 107</em>(6), 1465–1472.
+            <a class="ref-item__link" href="https://doi.org/10.1111/jpn.13855" target="_blank" rel="noopener noreferrer">https://doi.org/10.1111/jpn.13855</a>
+          </li>
+          <li class="ref-item">
+            Roudebush, P., Polzin, D. J., Ross, S. J., Towell, T. L., Adams, L. G., &amp; Forrester, S. D. (2009). Therapies for feline chronic kidney disease: What is the evidence? <em>Journal of Feline Medicine and Surgery, 11</em>(3), 195–210.
+            <a class="ref-item__link" href="https://doi.org/10.1016/j.jfms.2009.01.004" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.jfms.2009.01.004</a>
+          </li>
+        </ul>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn" data-close-sources>Chiudi</button>
+      </footer>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span id="anno"></span> · Norsan
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,757 @@
+:root {
+  --bg: #f4f6f8;
+  /* foten beige — solo sfondo pagina */
+  --page-bg: #efeddd;
+  --surface: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7280;
+  /* foten grün */
+  --primary: #3d8061;
+  --primary-dark: #32694f;
+  --border: #e5e7eb;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background: var(--page-bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background: var(--primary);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.topbar__logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  width: 100%;
+  max-width: 960px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.card__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.35;
+  color: var(--primary);
+  margin-bottom: 1.75rem;
+}
+
+/* Punto separatore del titolo: leggermente più grande e con più respiro */
+.card__title-dot {
+  margin: 0 0.5em;
+  font-size: 1.25em;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.result-card {
+  scroll-margin-top: 1rem;
+}
+
+.result-card[hidden] {
+  display: none;
+}
+
+.result-card .card__title {
+  margin-bottom: 0.75rem;
+}
+
+.result-card__subtitle {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.dose-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dose-table-wrap[hidden] {
+  display: none;
+}
+
+.dose-table {
+  width: 100%;
+  min-width: 740px;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  /* Layout fisso: colonne identiche tra tabella cane e gatto,
+     indipendentemente dai contenuti */
+  table-layout: fixed;
+}
+
+.dose-table th:nth-child(2) {
+  width: 140px;
+}
+
+.dose-table th.col-prodotto {
+  width: 105px;
+}
+
+.dose-table th {
+  text-align: left;
+  font-weight: 700;
+  color: var(--primary);
+  padding: 0.7rem 0.9rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.dose-table th:nth-child(2),
+.dose-table td:nth-child(2) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Colonne dosaggio prodotti: titolo e valori centrati */
+.dose-table th.col-prodotto,
+.dose-table td.ml-prodotto {
+  text-align: center;
+}
+
+.dose-table td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.dose-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dose-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Unità di misura della posologia: su desktop la sigla compatta (spiegata
+   dal tooltip nell'intestazione), su mobile la forma estesa perché
+   l'intestazione con il tooltip non è visibile */
+.unit-mobile {
+  display: none;
+}
+
+/* Nella tabella i tooltip si aprono a destra per non essere tagliati
+   dal contenitore scrollabile */
+.dose-table .tooltip__text {
+  left: calc(100% + 10px);
+  right: auto;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dose-table .tooltip__text::after {
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%);
+  border-color: transparent;
+  border-right-color: var(--text);
+}
+
+/* Nell'intestazione il tooltip si aggancia in alto e cresce verso il basso:
+   se restasse centrato sull'icona, la metà superiore uscirebbe dal bordo
+   del contenitore scrollabile e verrebbe tagliata */
+.dose-table thead .tooltip__text {
+  top: -6px;
+  transform: none;
+}
+
+.dose-table thead .tooltip__text::after {
+  top: 14px;
+  transform: none;
+}
+
+.legend-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0 1.25rem;
+}
+
+.legend__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.6rem;
+}
+
+.legend__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ===== Card fonti / bibliografia ===== */
+.sources-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  background: #eef4f0;
+  border: 1px solid #d3e2da;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.sources-card__icon {
+  margin-top: 0.2rem;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.sources-card__text {
+  margin: 0;
+}
+
+.sources-card__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .sources-card__link:hover {
+    color: var(--primary-dark);
+  }
+}
+
+/* ===== Modale bibliografia ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal__dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 680px;
+  max-height: calc(100vh - 3rem);
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* Header e footer fissi: solo il corpo scorre */
+.modal__header {
+  position: sticky;
+  top: 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.modal__body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal__footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.ref-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.ref-item {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--border);
+}
+
+.ref-item__link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--primary);
+  word-break: break-all;
+}
+
+@media (hover: hover) {
+  .ref-item__link:hover {
+    color: var(--primary-dark);
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.control-group--grow {
+  flex: 1;
+  min-width: 280px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control--grow {
+  flex: 1;
+  min-width: 140px;
+}
+
+.control__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  cursor: help;
+  outline: none;
+}
+
+.tooltip i {
+  font-size: 0.85rem;
+  transition: color 0.15s ease;
+}
+
+.tooltip:hover i,
+.tooltip:focus i {
+  color: var(--primary);
+}
+
+.tooltip__text {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  /* Annulla l'eventuale nowrap ereditato dalla cella che ospita il tooltip
+     (es. colonna Posologia): senza, il testo resta su una riga e viene tagliato */
+  white-space: normal;
+  background: var(--text);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 10;
+}
+
+.tooltip__text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--text);
+}
+
+.tooltip:hover .tooltip__text,
+.tooltip:focus .tooltip__text {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tipologia {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.pet-btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.pet-btn i {
+  font-size: 1.1rem;
+}
+
+/* Hover solo dove esiste davvero un puntatore: sui touch screen lo stato
+   hover resterebbe "appiccicato" al bottone dopo il tap */
+@media (hover: hover) {
+  .pet-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+.pet-btn.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+.pet-btn:active {
+  transform: scale(0.96);
+}
+
+.input-unit {
+  position: relative;
+  width: 100%;
+}
+
+/* Suffisso "kg" di sola visualizzazione, dentro il campo a destra */
+.input-unit__suffix {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+.control--grow input {
+  width: 100%;
+  height: 48px;
+  padding: 0 2.6rem 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.15s ease;
+}
+
+.control--grow input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+#peso-metabolico {
+  background: var(--bg);
+  color: var(--muted);
+  cursor: default;
+}
+
+.btn {
+  height: 48px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--primary-dark);
+  }
+}
+
+.output {
+  font-size: 1.05rem;
+}
+
+.output:empty {
+  display: none;
+}
+
+.output--error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.output--error i {
+  color: #d32f2f;
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ===== Responsive =====
+   Breakpoint a 860px: sotto questa soglia la riga dei controlli
+   non ha più spazio e il bottone Calcola andrebbe a capo */
+@media (max-width: 860px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .card__title {
+    font-size: 1.15rem;
+  }
+
+  /* Gruppi impilati con spaziatura più contenuta */
+  .controls {
+    gap: 1.5rem;
+  }
+
+  .control-group--grow {
+    flex-basis: 100%;
+  }
+
+  /* Il gruppo Tipologia occupa tutta la riga... */
+  .controls > .control {
+    flex-basis: 100%;
+  }
+
+  .tipologia {
+    width: 100%;
+  }
+
+  /* ...e i bottoni Cane/Gatto si dividono lo spazio a metà */
+  .pet-btn {
+    flex: 1;
+  }
+
+  /* Il pulsante Calcola a tutta larghezza */
+  #calcola {
+    width: 100%;
+  }
+}
+
+/* ===== Tabella dosaggi → card =====
+   Breakpoint a 860px, allineato a quello dei controlli: sotto questa soglia
+   la tabella (min-width 740px + padding di card e container) non entra più
+   nel viewport e andrebbe in scroll orizzontale, che gli utenti su mobile
+   non percepiscono. Ogni riga diventa quindi una card verticale con tutto
+   visibile, e l'intera interfaccia passa a mobile nello stesso momento. */
+@media (max-width: 860px) {
+  .dose-table-wrap {
+    overflow-x: visible;
+  }
+
+  .dose-table {
+    min-width: 0;
+    table-layout: auto;
+  }
+
+  .dose-table thead {
+    display: none;
+  }
+
+  .dose-table,
+  .dose-table tbody,
+  .dose-table tr,
+  .dose-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .dose-table tr {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    padding: 0.9rem 1rem;
+  }
+
+  .dose-table tr + tr {
+    margin-top: 0.75rem;
+  }
+
+  .dose-table td {
+    padding: 0;
+    border-bottom: none;
+    text-align: left;
+    white-space: normal;
+  }
+
+  /* Patologia: titolo della card */
+  .dose-table td:first-child {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+  }
+
+  .unit-desktop {
+    display: none;
+  }
+
+  .unit-mobile {
+    display: inline;
+  }
+
+  /* Posologia: dato secondario sotto il titolo, chiude con un divisore.
+     Selettore lungo per vincere sulle regole desktop di nth-child(2)
+     (allineamento a destra) e di tr:last-child (niente bordo) */
+  .dose-table tbody tr td:nth-child(2) {
+    text-align: left;
+    white-space: normal;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 0.1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.6rem;
+  }
+
+  /* Dosaggi prodotto: righe etichetta–valore, il valore è il risultato */
+  .dose-table td[data-label] {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-weight: 700;
+    padding: 0.2rem 0;
+  }
+
+  .dose-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  /* Nelle card c'è spazio sopra: il tooltip torna centrato sopra l'icona
+     (la posizione a destra serviva solo dentro il contenitore scrollabile) */
+  .dose-table .tooltip__text {
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+  }
+
+  .dose-table .tooltip__text::after {
+    top: 100%;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    border-color: transparent;
+    border-top-color: var(--text);
+  }
+}
+
+@media (max-width: 480px) {
+  .control-group {
+    flex-wrap: wrap;
+  }
+
+  .control--grow {
+    flex-basis: 100%;
+  }
+}
