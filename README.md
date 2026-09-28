@@ -5,11 +5,12 @@ App statica: HTML/CSS/JS vanilla, nessun build step, nessuna chiamata di rete.
 
 ## Deploy
 
-Sevalla Static Site → `calcolatore.foten.it`
+Static site su hosting esterno → `calcolatore.foten.it`
 
 - root directory: `/`
 - published directory: `public`
 - install / build command: nessuno
-- auto-deploy sul branch `main`
 
 Solo `public/` va online. Tutto il resto del repo non viene pubblicato.
+
+Dettagli di provisioning/deploy: vedi documentazione interna (non in questo repo).
