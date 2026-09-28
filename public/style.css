@@ -156,9 +156,12 @@ body {
 }
 
 .dose-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+  display: inline;
+}
+
+.dose-name .tooltip {
+  margin-left: 0.4rem;
+  vertical-align: middle;
 }
 
 /* Unità di misura della posologia: su desktop la sigla compatta (spiegata
